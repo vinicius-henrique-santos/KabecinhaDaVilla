@@ -58,13 +58,18 @@ function loadMapImages() {
             }
 
             if (loadedMaps === totalMaps) {
-                showStartScreen();
+                startGame(); // Começar o jogo após carregar os mapas
             }
         };
         img.onerror = () => {
             console.error(`Erro ao carregar a imagem: mapas/mapa0${i}.png`);
         };
     }
+}
+
+function startGame() {
+    gameStarted = true;
+    gameLoop();
 }
 
 const eu = {
@@ -81,6 +86,7 @@ const eu = {
     desenha() {
         let eusprite = new Image();
         eusprite.src = 'img/careca.png';
+
         desenharMapa();
 
         if (msg) {
@@ -103,8 +109,7 @@ const eu = {
 };
 
 function desenharMapa() {
-    let img = new Image();
-    img.src = currentMap;
+    const img = mapImages[currentMap];
 
     if (currentMap === "mapas/mapa01.png") {
         zoomLevel = 2.8;
@@ -156,6 +161,15 @@ function movimentarEu() {
     verificaTransicao();
 }
 
+function verificaInteracao() {
+    // Exemplo de interação simples (ajuste conforme sua lógica)
+    if (currentMap === 'mapas/mapa01.png' && eu.pX > 400 && eu.pX < 450) {
+        msg = true;
+    } else {
+        msg = false;
+    }
+}
+
 function verificaTransicao() {
     if (currentMap === 'mapas/mapa01.png' && eu.pX > 1300) {
         currentMap = 'mapas/mapa02.png';
@@ -165,6 +179,21 @@ function verificaTransicao() {
         currentMap = 'mapas/mapa01.png';
         eu.pX = 1300;
     }
+}
+
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (gameStarted) {
+        eu.atualiza();
+        eu.desenha();
+    } else {
+        ctx.fillStyle = 'black';
+        ctx.font = '20px Arial';
+        ctx.fillText('Carregando...', canvas.width / 2 - 50, canvas.height / 2);
+    }
+
+    requestAnimationFrame(gameLoop);
 }
 
 loadMapImages();
