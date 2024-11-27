@@ -68,8 +68,8 @@ if(currentMap==='mapas/mapa01.png'){
 const eu = {
     sx: 8, 
     sy: 6,
-    pX : 900,  
-    pY : 570,  
+    pX : 900,  // 900
+    pY : 570, 
     altura: 47,
     gordura: 43,
     speed: 3,
@@ -268,7 +268,7 @@ function movimentarEu() {
     ) {
         currentMap = 'mapas/mapa02.png';
         eu.pX=1158;
-        eu.pY=596;
+        eu.pY=636;
     }
     
     if(
@@ -280,7 +280,7 @@ function movimentarEu() {
     ) {
         currentMap = 'mapas/mapa01.png';
         eu.pX=80;
-        eu.pY=776;
+        eu.pY=816;
     }
     
     if(
@@ -291,8 +291,8 @@ function movimentarEu() {
         jogadorY < 587 + 32
     ) {
         currentMap = 'mapas/mapa04.png';
-        eu.pX=800;
-        eu.pY=680;
+        eu.pX=1000;
+        eu.pY=690;
         eu.sx = (eu.sx === 5) ? 5 : (eu.sx === 53) ? 100 : 5;
         eu.sy = 148;
     }
@@ -331,7 +331,7 @@ function movimentarEu() {
         
     ) {
         currentMap = 'mapas/mapa01.png';
-        eu.pX=1900;
+        eu.pX=1350;
         eu.pY=450;
         ajusteX = cameraX < 0 ? 0 : cameraX;
         ajusteY = cameraY < 0 ? 0 : cameraY;
@@ -369,7 +369,7 @@ function desenhaColisoes() {
         let ajusteX = cameraX < 0 ? 0 : cameraX;
         let ajusteY = cameraY < 0 ? 0 : cameraY;
 
-        ctx.strokeStyle = 'transparent';
+        ctx.strokeStyle = 'red';
         ctx.strokeRect(
             (colisao.x - ajusteX) * zoomLevel, // Ajuste com câmera e zoom para o desenho
             (colisao.y - ajusteY) * zoomLevel, // Ajuste com câmera e zoom para o desenho
