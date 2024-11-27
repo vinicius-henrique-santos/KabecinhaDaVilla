@@ -1,13 +1,5 @@
-let ajusteResolx = (window.innerWidth === 1920) ? 0 : 180;
-let ajusteResoly = (window.innerWidth === 1920) ? 0 : 22;
 const canvas = document.getElementById("screen");
 const ctx = canvas.getContext('2d');
-
-const baseWidth = 1440;
-const baseHeight = 900;
-
-const scaleX = window.innerWidth / baseWidth;
-const scaleY = window.innerHeight / baseHeight;
 
 let currentMap = 'mapas/mapa01.png';  
 let mapImages = {};
@@ -22,15 +14,6 @@ let gameStarted = false;
 let keys = {};
 let msg = false;
 let intera=false;
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-window.addEventListener('resize', function() {
-    scaleX = window.innerWidth / baseWidth;
-    scaleY = window.innerHeight / baseHeight;
-});
-
 window.addEventListener('keydown', function(event){
     keys[event.key] = true;
 });
@@ -39,15 +22,24 @@ window.addEventListener('keyup', function(event){
     keys[event.key] = false;
 });
 
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+window.addEventListener('resize', function() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
 function loadMapImages() {                  
     for (let i = 1; i <= totalMaps; i++) {
         let img = new Image();
-        img.src = mapas/mapa0${i}.png;
+        img.src = `mapas/mapa0${i}.png`;
         img.onload = () => {
             loadedMaps++;
-            mapImages[mapas/mapa0${i}.png] = img;
+            mapImages[`mapas/mapa0${i}.png`] = img;
             
-            if (mapas/mapa0${i}.png === currentMap) {
+            if (`mapas/mapa0${i}.png` === currentMap) {
                 imgWidth = img.width * zoomLevel;
                 imgHeight = img.height * zoomLevel;
                 bordaW = img.width;
@@ -60,7 +52,7 @@ function loadMapImages() {
 
         };
         img.onerror = () => {
-            console.error(Erro ao carregar a imagem: img/mapa0${i}.png);
+            console.error(`Erro ao carregar a imagem: img/mapa0${i}.png`);
         };
     }
 }
@@ -76,11 +68,11 @@ if(currentMap==='mapas/mapa01.png'){
 const eu = {
     sx: 8, 
     sy: 6,
-    pX : 880,  
+    pX : 900,  
     pY : 570,  
     altura: 47,
     gordura: 43,
-    speed: 1,
+    speed: 3,
     health: 100,
     tamanhox:10,
     tamanhoy:10,
@@ -93,7 +85,7 @@ const eu = {
         if(msg){
             ctx.fillStyle = 'black';
             ctx.font = '16px Arial';
-            ctx.fillText(Aperte E para escavar, 240, 360);
+            ctx.fillText(`Aperte E para escavar`, 240, 360);
         }
         ctx.drawImage(
             eusprite,
@@ -114,6 +106,7 @@ const eu = {
                 ctx.fillStyle = "black";
                 ctx.fillRect(posX, posY, 10, 5); 
     
+                // Verifica se o tiro saiu da tela
                 if (posY < 0 || posY > canvas.height) { 
                     clearInterval(intervaloTiro); 
                     tiro = false;
@@ -142,16 +135,6 @@ function atualizaCamera() {
     cameraY = Math.max(0, Math.min(cameraY, imgHeight - canvas.height));
 }
 
-window.addEventListener('keydown', (event) => {
-    keys[event.key.toLowerCase()] = true;
-});
-
-window.addEventListener('keyup', (event) => {
-    keys[event.key.toLowerCase()] = false;
-    if (event.key.toLowerCase() === 'e' && !intera) {
-        verificaInteracao(); 
-    }
-});
 
 
 function desenharMapa() {
@@ -264,11 +247,13 @@ function movimentarEu() {
     } else {
         cameraY = eu.pY - canvas.height / 2;
     }
+
     
-    if(verificaColisao()){
-        resolveColisao();
+    if (verificaColisao()) {
+        eu.pX = prevX;
+        eu.pY = prevY;
     }
-    
+
     let jogadorX = eu.pX / zoomLevel + cameraX;
     let jogadorY = eu.pY / zoomLevel + cameraY;
     let jogadorLargura = eu.gordura / zoomLevel;
@@ -282,8 +267,8 @@ function movimentarEu() {
         jogadorY < 578 + 21
     ) {
         currentMap = 'mapas/mapa02.png';
-        eu.pX=1158-ajusteResolx;
-        eu.pY=596-ajusteResoly;
+        eu.pX=1158;
+        eu.pY=596;
     }
     
     if(
@@ -295,7 +280,7 @@ function movimentarEu() {
     ) {
         currentMap = 'mapas/mapa01.png';
         eu.pX=80;
-        eu.pY=776-ajusteResoly;
+        eu.pY=776;
     }
     
     if(
@@ -307,7 +292,7 @@ function movimentarEu() {
     ) {
         currentMap = 'mapas/mapa04.png';
         eu.pX=800;
-        eu.pY=680+ajusteResoly;
+        eu.pY=680;
         eu.sx = (eu.sx === 5) ? 5 : (eu.sx === 53) ? 100 : 5;
         eu.sy = 148;
     }
@@ -321,7 +306,7 @@ function movimentarEu() {
     ) {
         currentMap = 'mapas/mapa03.png';
         eu.pX=726;
-        eu.pY=620-ajusteResoly;
+        eu.pY=620;
     }
 
     if(
@@ -331,13 +316,9 @@ function movimentarEu() {
         jogadorY + jogadorAltura > 345 &&
         jogadorY < 345 + 23
     ) {
-        let ajusteMercado = 0;
-        if(ajusteResoly!=0){
-            ajusteMercado=ajusteResoly-18;
-        }
         currentMap = 'mapas/mapa02.png';
         eu.pX=560;
-        eu.pY=605+ajusteMercado;
+        eu.pY=605;
     }
 
     if(
@@ -350,11 +331,7 @@ function movimentarEu() {
         
     ) {
         currentMap = 'mapas/mapa01.png';
-        let ajuste = 0;
-        if(ajusteResolx!=0){
-            ajuste = 750;
-        }
-        eu.pX=1900-ajuste;
+        eu.pX=1900;
         eu.pY=450;
         ajusteX = cameraX < 0 ? 0 : cameraX;
         ajusteY = cameraY < 0 ? 0 : cameraY;
@@ -377,46 +354,6 @@ function movimentarEu() {
     atualizaCamera();
 }
 
-function resolveColisao() {
-    let colisoesAtuais;
-    if (currentMap === 'mapas/mapa01.png') {
-        colisoesAtuais = colisoes.filter(colisao => colisao.mapa === 1);
-    } else if (currentMap === 'mapas/mapa02.png') {
-        colisoesAtuais = colisoes.filter(colisao => colisao.mapa === 2);
-    } else if (currentMap === 'mapas/mapa03.png') {
-        colisoesAtuais = colisoes.filter(colisao => colisao.mapa === 3);
-    } else if (currentMap === 'mapas/mapa04.png') {
-        colisoesAtuais = colisoes.filter(colisao => colisao.mapa === 4);
-    }
-
-    let jogadorX = eu.pX / zoomLevel + cameraX;
-    let jogadorY = eu.pY / zoomLevel + cameraY;
-    let jogadorLargura = eu.gordura / zoomLevel;
-    let jogadorAltura = eu.altura / zoomLevel;
-
-    let colisaoEncontrada = null;
-
-    colisoesAtuais.some(colisao => {
-        if (
-            jogadorX + jogadorLargura > colisao.x &&
-            jogadorX < colisao.x + colisao.largura &&
-            jogadorY + jogadorAltura > colisao.y &&
-            jogadorY < colisao.y + colisao.altura
-        ) {
-            colisaoEncontrada = colisao;
-        }
-    });
-    if(((colisaoEncontrada.x-colisaoEncontrada.largura)/2) < eu.pX){
-        eu.pX += 3;
-    }
-
-    if(colisaoEncontrada===null){
-        return;
-    }
-    resolveColisao();
-}
-
-
 function desenhaColisoes() {
     let colisoesAtuais;
     if(currentMap==='mapas/mapa01.png'){
@@ -432,7 +369,7 @@ function desenhaColisoes() {
         let ajusteX = cameraX < 0 ? 0 : cameraX;
         let ajusteY = cameraY < 0 ? 0 : cameraY;
 
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = 'transparent';
         ctx.strokeRect(
             (colisao.x - ajusteX) * zoomLevel, // Ajuste com câmera e zoom para o desenho
             (colisao.y - ajusteY) * zoomLevel, // Ajuste com câmera e zoom para o desenho
@@ -458,7 +395,8 @@ function verificaColisao() {
         let jogadorY = eu.pY / zoomLevel + cameraY;
         let jogadorLargura = eu.gordura / zoomLevel;
         let jogadorAltura = eu.altura / zoomLevel;
-        
+
+
         return (
             jogadorX + jogadorLargura > colisao.x &&
             jogadorX < colisao.x + colisao.largura &&
@@ -490,14 +428,43 @@ function atira() {
         posX = eu.pX; 
     }
 }
+const video = document.createElement('video'); 
+video.src = 'img/telaInicial.mp4';
+video.preload = 'auto';
+video.loop = true;
 
+video.addEventListener('canplaythrough', () => {
+    video.loop = true; 
+    video.play(); 
+    mostrarVideo();
+});
+
+function showStartScreen() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); 
+    ctx.drawImage(
+        video,
+        0, 0, video.videoWidth, video.videoHeight, 
+        0, 0, canvas.width, canvas.height          
+    );
+
+    requestAnimationFrame(showStartScreen);
+    canvas.addEventListener('click', startGame);
+}
+
+function startGame() {
+    if (!gameStarted) {
+        canvas.removeEventListener('click', startGame);
+        gameStarted = true;
+        cutsceneActive = false;
+        loop();
+    }
+}
 
 function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     eu.atualiza();
     eu.desenha();
     desenhaColisoes();
-    verificaInteracao();
     requestAnimationFrame(loop);
     if (keys['e']) { 
         if (!intera) {
@@ -506,3 +473,4 @@ function loop() {
     }
 }
 loadMapImages();
+
