@@ -74,12 +74,12 @@ const colisoes = [
     { x: 769, y: 290, largura: 22, altura: 15 , mapa: 1},
     { x: 674, y: 241, largura: 93, altura: 16 , mapa: 1},
     { x: 891, y: 314, largura: 18, altura: 15 , mapa: 1},
-    {x:galinha.pX, y:galinha.pY, largura:galinha.gordura, altura: galinha.altura, mapa: 1},//galinha
-    {x:436, y:202, largura:13, altura:9, mapa: 1},//mina
-    {x:486, y:254, largura:12, altura:5, mapa: 1},//idoso
-    {x:488, y:277, largura:13, altura:5, mapa: 1},//cão
-    {x:boina.pX+8, y:205, largura:12, altura:8, mapa:1},//boina
-    {x:217, y:154, largura:21, altura:10, mapa: 1},//cavalo
+    {x:galinha.pX, y:galinha.pY, largura:galinha.gordura, altura: galinha.altura, mapa: 1},
+    {x:436, y:202, largura:13, altura:9, mapa: 1},
+    {x:486, y:254, largura:12, altura:5, mapa: 1},
+    {x:488, y:277, largura:13, altura:5, mapa: 1},
+    {x:boina.pX+8, y:205, largura:12, altura:8, mapa:1},
+    {x:217, y:154, largura:21, altura:10, mapa: 1},
     { x: 653, y: 537, largura: 15, altura: 15 , mapa: 1},
     { x: 149, y: 613, largura: 14, altura: 11 , mapa: 1},
     { x: 268, y: 600, largura: 44, altura: 43 , mapa: 1},
@@ -143,30 +143,20 @@ const colisoes = [
     { x: 80, y: 315, largura: 37, altura: 52, mapa: 4},
     { x: 97, y: 405, largura: 43, altura: 52, mapa: 4},
     { x: 148, y: 211, largura: 196, altura: 83, mapa: 4},
-    
-    { x: 168, y: 300, largura: 120, altura: 130, mapa: 4},
+    { x: 168, y: 300, largura: 120, altura: 120, mapa: 4},
     { x: 0, y: 600, largura: 750, altura: 10, mapa: 4},
-    { x: 420, y: 342, largura: 80, altura: 13, mapa: 2},
-    { x: 427, y: 467, largura: 400, altura: 400, mapa: 2},
-    { x: 525, y: 380, largura: 26, altura: 52, mapa: 2},
-    { x: 357, y: 506, largura: 43, altura: 52, mapa: 2},
-    { x: 210, y: 558, largura: 90, altura: 12, mapa: 2},
-    { x: 375, y: 558, largura: 90, altura: 12, mapa: 2},
-    { x: 0, y: 595, largura: 630, altura: 1, mapa: 2},
-    { x: 160, y: 540, largura: 80, altura: 30, mapa: 2},
-    { x: 36, y: 0, largura: 21, altura: 500, mapa: 2},
-    { x: 50, y: 150, largura: 60, altura: 20, mapa: 2},
-    { x: 112, y: 203, largura: 114, altura: 40 , mapa: 2},
-    { x: 575, y: 360, largura: 23, altura: 102, mapa: 2},
-    { x: 575, y: 360, largura: 73, altura: 10, mapa: 2},
-    { x: 575, y: 80, largura: 23, altura: 185, mapa: 2},
-    { x: 574, y: 240, largura: 73, altura: 19, mapa: 2},
-    { x: 0, y: 0, largura: 640, altura: 203, mapa: 2},
-    { x: 470, y: 195, largura: 31, altura: 60, mapa: 2},
-    { x: 520, y: 240, largura: 61, altura: 20, mapa: 2},
-    { x: 110, y: 226, largura: 49, altura: 40, mapa: 2},
-    { x: 352, y: 220, largura: 15, altura: 15, mapa: 2},
-    { x: 360, y: 387, largura: 14, altura: 14, mapa: 2},
+    { x: 290, y: 300, largura: 210, altura: 40, mapa: 4},
+    { x: 290, y: 360, largura: 40, altura: 35, mapa: 4},
+    { x: 314, y: 430, largura: 15, altura: 15, mapa: 4},
+    { x: 414, y: 430, largura: 200, altura: 100, mapa: 4},
+    { x: 460, y: 300, largura: 120, altura: 120, mapa: 4},
+    { x: 550, y: 530, largura: 10, altura: 60, mapa: 4},
+    { x: 250, y: 530, largura: 10, altura: 60, mapa: 4},
+    { x: 70, y: 500, largura: 260, altura: 35, mapa: 4},
+    { x: 69, y: 360, largura: 21, altura: 190, mapa: 4},
+    { x: 85, y: 480, largura: 200, altura: 20, mapa: 4}
     
 ];
+
+
 
