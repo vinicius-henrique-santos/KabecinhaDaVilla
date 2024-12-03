@@ -18,7 +18,6 @@ const idoso = {
     mapa: 1,
     intervaloFrame: 700, 
     ultimoTempoTroca: Date.now(),  
-    frase: "Oi jovem, você está aí ainda?",
     desenha() {
         let ajusteX = cameraX < 0 ? 0 : cameraX;
         let ajusteY = cameraY < 0 ? 0 : cameraY;
@@ -422,6 +421,56 @@ const poste = {
 };
 personagens.push(poste);
 
+const arvore3img = new Image();
+arvore3img.src = 'img/ArvoresE Cia.png';
+const arvore3 = {
+    sx: 240, 
+    sy: 530,
+    pX : 313,  
+    pY : 410,  
+    altura: 93,
+    gordura: 48,
+    mapa: 4,
+    desenha() {
+        let ajusteX = cameraX < 0 ? 0 : cameraX;
+        let  ajusteY = cameraY < 0 ? 0 : cameraY;
+        
+        ctx.drawImage(
+            arvore3img,
+            this.sx, this.sy,
+            this.gordura, this.altura,  
+            (this.pX - ajusteX) * zoomLevel, (this.pY - ajusteY) * zoomLevel, 
+            this.gordura + zoomLevel + 8, this.altura + zoomLevel + 37
+        );
+    }
+};
+personagens.push(arvore3);
+
+const arvore2img = new Image();
+arvore2img.src = 'img/ArvoresE Cia.png';
+const arvore2 = {
+    sx: 240, 
+    sy: 530,
+    pX : 410,  
+    pY : 410,  
+    altura: 93,
+    gordura: 48,
+    mapa: 4,
+    desenha() {
+        let ajusteX = cameraX < 0 ? 0 : cameraX;
+        let  ajusteY = cameraY < 0 ? 0 : cameraY;
+        
+        ctx.drawImage(
+            arvore2img,
+            this.sx, this.sy,
+            this.gordura, this.altura,  
+            (this.pX - ajusteX) * zoomLevel, (this.pY - ajusteY) * zoomLevel, 
+            this.gordura + zoomLevel + 8, this.altura + zoomLevel + 37
+        );
+    }
+};
+personagens.push(arvore2);
+
 const cabanaimg = new Image();
 cabanaimg.src = 'img/ArvoresE Cia.png';
 const cabana = {
@@ -447,26 +496,81 @@ const cabana = {
 };
 personagens.push(cabana);
 
+const b1img = new Image();
+b1img.src = 'npc/Roxin.png';
 
-const distanciaInteracao = 5;
-function verificaInteracao() {
-    personagens.forEach((npc) => {
-        const distanciaX = Math.abs(eu.pX - npc.x);
-        const distanciaY = Math.abs(eu.pY - npc.y);
+const b1 = {
+    sx: 0, 
+    sy: 0,
+    pX : 600,  
+    pY : 310,  
+    altura: 60,
+    gordura: 60,
+    mapa: 2,
+    desenha() {
+        let ajusteX = cameraX < 0 ? 0 : cameraX;
+        let  ajusteY = cameraY < 0 ? 0 : cameraY;
+        
+        ctx.drawImage(
+            b1img,
+            this.sx, this.sy,
+            this.gordura, this.altura,
+            (this.pX - ajusteX) * zoomLevel, (this.pY - ajusteY) * zoomLevel, 
+            this.gordura + zoomLevel + 17, this.altura + zoomLevel + 32
+        );
+    }
+};
+personagens.push(b1);
 
-        if (distanciaX <= distanciaInteracao && distanciaY <= distanciaInteracao) {
-            if (teclaEPressionada) {
-                desenhaFrase(npc.frase, npc.pX, npc.pY );
-            }
-        }
-    });
-}
+const b2img = new Image();
+b2img.src = 'npc/Vilão.png';
+const b2 = {
+    sx: 0, 
+    sy: 0,
+    pX : 600,  
+    pY : 290,  
+    altura: 60,
+    gordura: 60,
+    mapa: 2,
+    desenha() {
+        let ajusteX = cameraX < 0 ? 0 : cameraX;
+        let  ajusteY = cameraY < 0 ? 0 : cameraY;
+        
+        ctx.drawImage(
+            b2img,
+            this.sx, this.sy,
+            this.gordura, this.altura,
+            (this.pX - ajusteX) * zoomLevel, (this.pY - ajusteY) * zoomLevel, 
+            this.gordura + zoomLevel + 17, this.altura + zoomLevel + 32
+        );
+    }
+};
+personagens.push(b2);
 
-function desenhaFrase(frase, x, y) {
-    ctx.font = "16px Arial";
-    ctx.fillStyle = "black";
-    ctx.fillText(frase, x, y - 10);
-}
+const cartaimg = new Image();
+cartaimg.src = 'img/carta.png';
+const carta = {
+    sx: 0, 
+    sy: 0,
+    pX : 413,  
+    pY : 413,  
+    altura: 60,
+    gordura: 60,
+    mapa: 4,
+    desenha() {
+        let ajusteX = cameraX < 0 ? 0 : cameraX;
+        let  ajusteY = cameraY < 0 ? 0 : cameraY;
+        
+        ctx.drawImage(
+            cartaimg,
+            this.sx, this.sy,
+            this.gordura, this.altura,  
+            (this.pX - ajusteX) * zoomLevel, (this.pY - ajusteY) * zoomLevel, 
+            this.gordura + zoomLevel, this.altura + zoomLevel
+        );
+    }
+};
+personagens.push(carta);
 
 
 function desenhaObj(){
@@ -474,6 +578,12 @@ function desenhaObj(){
         poste.desenha();
         arvore.desenha();
         cabana.desenha();
+    }
+
+    if(currentMap==='mapas/mapa04.png'){
+        carta.desenha();
+        arvore2.desenha();
+        arvore3.desenha();
     }
 }
 function desenhaNpc(){
@@ -486,6 +596,32 @@ function desenhaNpc(){
         mina.desenha();
         cavalo.desenha();
     }
+   
+    if(currentMap==='mapas/mapa02.png'){
+        b1.pX=600;
+        b1.pY=290;
+        b2.pX=600;
+        b2.pY=310;
+    }
+    if(currentMap==='mapas/mapa02.png' && comprado){
+        b1.desenha();
+        b2.desenha();
+    }
+
+    if (currentMap === 'mapas/mapa04.png' && desenhaBandi) {
+        b1.pX = eu.pX - 628; 
+        b1.pY = eu.pY - 400; 
+
+        b2.pX = eu.pX - 628; 
+        b2.pY = eu.pY - 370;
+
+        eu.speed = 0;
+
+        b1.desenha();
+        b2.desenha();
+    }
+
+    
 }
 function desenhaaoFundo(){
     if(currentMap==='mapas/mapa01.png'){
