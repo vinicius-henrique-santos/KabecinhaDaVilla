@@ -12,8 +12,16 @@ let cameraY = 0;
 let zoomLevel = 2.8;
 let gameStarted = false;
 let keys = {};
-let msg = false;
-let intera=false;
+let comprado = false;
+let msgcom = false;
+let desenhaBandi = true;
+let gamePaused = false; 
+let cut = 0;
+let showThanks = false;
+
+
+
+
 window.addEventListener('keydown', function(event){
     keys[event.key] = true;
 });
@@ -79,13 +87,37 @@ const eu = {
     desenha() {
         let eusprite = new Image();
         eusprite.src = 'img/careca.png';
+
         //desenha funções
         desenharMapa();
         desenhaaoFundo();
+        if (currentMap === 'mapas/mapa03.png' && !comprado) {
+            ctx.fillStyle = 'white';
+            ctx.font = '20px "Roboto", Arial, sans-serif';
+            ctx.fillText(`Vá a uma prateleira e pegue os itens.`, 240, 220);
+        }
+        
+        if (currentMap === 'mapas/mapa04.png') {
+            if (desenhaBandi) {
+                ctx.fillStyle = 'red';
+                ctx.font = '35px "Roboto", Arial, sans-serif';
+                ctx.fillText(`ATIRE`, canvas.width / 2, 865);
+            }
+        }
         if(msg){
-            ctx.fillStyle = 'black';
-            ctx.font = '16px Arial';
-            ctx.fillText(`Aperte E para escavar`, 240, 360);
+            ctx.fillStyle = 'red';
+            ctx.font = '27px Arial';
+            ctx.fillText(`Aperte e para escavar`, 90, 115);
+        }
+        if(cartaTxt){
+            ctx.fillStyle = 'red';
+            ctx.font = '18px Arial';
+            ctx.fillText(`Dia 900 | Não sei se tenho tempo, então Deixei essa chave, tome! Você ganhou uma chave. Aperte q para sair`, 500, 900);
+        }
+        if(msgBarril){
+            ctx.fillStyle = 'red';
+            ctx.font = '17px Arial';
+            ctx.fillText(`Parece que vc pode usar a chave aqui?`, 270, 400);
         }
         ctx.drawImage(
             eusprite,
@@ -96,24 +128,42 @@ const eu = {
         );
         desenhaObj();
         desenhaNpc();
-        if(tiro){
-            ctx.fillRect(posX, posY, 10, 5);
+        if (tiro) {
+            let disparo = 6;
             let intervaloTiro = setInterval(() => {
-                ctx.clearRect(posX, posY, 10, 5);
-    
-                posY -= 3; 
-    
-                ctx.fillStyle = "black";
-                ctx.fillRect(posX, posY, 10, 5); 
-    
-                // Verifica se o tiro saiu da tela
-                if (posY < 0 || posY > canvas.height) { 
-                    clearInterval(intervaloTiro); 
+                ctx.clearRect(posX, posY, 7, 7); // Limpar posição anterior do tiro
+                posY -= disparo; // Mover o tiro para cima
+                ctx.fillStyle = "red";
+                ctx.fillRect(posX, posY, 7, 7); // Desenhar tiro na nova posição
+        
+                disparo++;
+        
+                if (disparo === 19) {
+                    desenhaBandi = false;
+                    clearInterval(intervaloTiro);
+                    disparo = 6;
                     tiro = false;
+                    eu.speed = 4;
                 }
             }, 30);
         }
+        if(!desenhaBandi && currentMap==='mapas/mapa04.png'){
+            ctx.fillStyle = 'black';
+            ctx.font = '25px "Roboto", Arial, sans-serif';
+            ctx.fillText(`Tente achar uma escapatória.`, 100, 300);
+        }
+        
         desenhaHud();
+        if (showThanks) {
+            const obg = new Image();
+            obg.src("img/cartafinal.png");
+            ctx.drawImage(
+                obg,
+                0, 0,
+                canvas.width, canvas.height
+            );
+            eu.speed = 0;
+        }
     },
     atualiza() {
         movimentarEu();
@@ -167,7 +217,6 @@ function desenharMapa() {
         zoomLevel=2.9;
         eu.tamanhox=12;
         eu.tamanhoy=12;
-        eu.speed = 4;
     }
     ctx.drawImage(
         img,
@@ -188,172 +237,6 @@ function verificaCamMov(){
     prevCamY = cameraY;
 }
 
-let animating = false;
-function movimentarEu() {
-    let prevX = eu.pX;
-    let prevY = eu.pY;
-
-    if (keys['ArrowUp'] || keys['w']) {
-        eu.pY -= eu.speed;
-        if (!animating) {
-            animating = true;
-            eu.sx = (eu.sx === 5) ? 53 : (eu.sx === 53) ? 100 : 5;
-            eu.sy = 148;
-            setTimeout(() => animating = false, 60); 
-        }
-    }
-    if (keys['ArrowDown'] || keys['s']) {
-        eu.pY += eu.speed;
-        if (!animating) {
-            animating = true;
-            eu.sx = (eu.sx === 5) ? 53 : (eu.sx === 53) ? 100 : 5;
-            eu.sy = 4;
-            setTimeout(() => animating = false, 60); 
-        }
-    }
-    if (keys['ArrowLeft'] || keys['a']) {
-        let bugCam = cameraX <= 0 ? 4 : 0;
-        eu.pX -= (eu.speed+bugCam);
-        if (!animating) {
-            animating = true;
-            eu.sx = (eu.sx === 5) ? 53 : (eu.sx === 53) ? 100 : 5;
-            eu.sy = 53;
-            setTimeout(() => animating = false, 60); 
-        }
-    }
-    if (keys['ArrowRight'] || keys['d']) {
-        let bugCam = cameraX <= 0 ? 4 : 0;
-        eu.pX += (eu.speed+bugCam);
-        if (!animating) {
-            animating = true;
-            eu.sx = (eu.sx === 5) ? 53 : (eu.sx === 53) ? 100 : 5;
-            eu.sy = 100 ;
-            setTimeout(() => animating = false, 60); 
-        }
-    }
-    
-    if (eu.pX < canvas.width / 2) {
-        cameraX = 0; 
-    } else if (eu.pX > imgWidth - canvas.width / 2) {
-        cameraX = imgWidth - canvas.width; 
-    } else {
-        cameraX = eu.pX - canvas.width / 2; 
-    }
-
-    if (eu.pY < canvas.height / 2) {
-        cameraY = 0; 
-    } else if (eu.pY > imgHeight - canvas.height / 2) {
-        cameraY = imgHeight - canvas.height; 
-    } else {
-        cameraY = eu.pY - canvas.height / 2;
-    }
-
-    
-    if (verificaColisao()) {
-        eu.pX = prevX;
-        eu.pY = prevY;
-    }
-
-    let jogadorX = eu.pX / zoomLevel + cameraX;
-    let jogadorY = eu.pY / zoomLevel + cameraY;
-    let jogadorLargura = eu.gordura / zoomLevel;
-    let jogadorAltura = eu.altura / zoomLevel;
-
-    if(
-        currentMap === 'mapas/mapa01.png' &&
-        jogadorX + jogadorLargura > 2 &&
-        jogadorX < 2 + 21 &&
-        jogadorY + jogadorAltura > 578 &&
-        jogadorY < 578 + 21
-    ) {
-        currentMap = 'mapas/mapa02.png';
-        eu.pX=1158;
-        eu.pY=636;
-    }
-    
-    if(
-        currentMap === 'mapas/mapa02.png' &&
-        jogadorX + jogadorLargura > 600 &&
-        jogadorX < 600 + 21 &&
-        jogadorY + jogadorAltura > 300 &&
-        jogadorY < 300 + 21
-    ) {
-        currentMap = 'mapas/mapa01.png';
-        eu.pX=80;
-        eu.pY=816;
-    }
-    
-    if(
-        currentMap === 'mapas/mapa02.png' &&
-        jogadorX + jogadorLargura > 287 &&
-        jogadorX < 287 + 40 &&
-        jogadorY + jogadorAltura > 587 &&
-        jogadorY < 587 + 32
-    ) {
-        currentMap = 'mapas/mapa04.png';
-        eu.pX=1000;
-        eu.pY=690;
-        eu.sx = (eu.sx === 5) ? 5 : (eu.sx === 53) ? 100 : 5;
-        eu.sy = 148;
-    }
-
-    if(
-        currentMap === 'mapas/mapa02.png' &&
-        jogadorX + jogadorLargura > 160 &&
-        jogadorX < 160 + 24 &&
-        jogadorY + jogadorAltura > 220 &&
-        jogadorY < 220 + 23
-    ) {
-        currentMap = 'mapas/mapa03.png';
-        eu.pX=726;
-        eu.pY=620;
-    }
-
-    if(
-        currentMap === 'mapas/mapa03.png' &&
-        jogadorX + jogadorLargura > 175 &&
-        jogadorX < 175 + 14 &&
-        jogadorY + jogadorAltura > 345 &&
-        jogadorY < 345 + 23
-    ) {
-        currentMap = 'mapas/mapa02.png';
-        eu.pX=560;
-        eu.pY=605;
-    }
-
-    if(
-        currentMap === 'mapas/mapa04.png' &&
-        jogadorX + jogadorLargura > 100 &&
-        jogadorX < 115 && 
-        jogadorY + jogadorAltura > 80 &&
-        jogadorY < 95 &&
-        keys['e']
-        
-    ) {
-        currentMap = 'mapas/mapa01.png';
-        eu.pX=1350;
-        eu.pY=450;
-        ajusteX = cameraX < 0 ? 0 : cameraX;
-        ajusteY = cameraY < 0 ? 0 : cameraY;
-    }
-
-    if (
-        currentMap === 'mapas/mapa04.png' &&
-        jogadorX + jogadorLargura > 100 &&
-        jogadorX < 115 && 
-        jogadorY + jogadorAltura > 80 &&
-        jogadorY < 95
-    ) {
-        msg=true;
-        intera = true;
-    } 
-    else{
-        msg=false;
-        intera = false;
-    }
-    atualizaCamera();
-}
-
 function desenhaColisoes() {
     let colisoesAtuais;
     if(currentMap==='mapas/mapa01.png'){
@@ -369,7 +252,7 @@ function desenhaColisoes() {
         let ajusteX = cameraX < 0 ? 0 : cameraX;
         let ajusteY = cameraY < 0 ? 0 : cameraY;
 
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = 'transparent';
         ctx.strokeRect(
             (colisao.x - ajusteX) * zoomLevel, // Ajuste com câmera e zoom para o desenho
             (colisao.y - ajusteY) * zoomLevel, // Ajuste com câmera e zoom para o desenho
@@ -406,6 +289,7 @@ function verificaColisao() {
     });
 }
 
+
 function desenhaHud(){
     const hud = new Image();
     hud.src = 'img/hud.png';
@@ -417,6 +301,8 @@ function desenhaHud(){
         );
     }
 }
+
+
 let tiro = false;
 let posY = null; 
 let posX = null; 
@@ -425,52 +311,90 @@ function atira() {
     if (!tiro) { 
         tiro = true; 
         posY = eu.pY; 
-        posX = eu.pX; 
+        posX = eu.pX + (eu.gordura / 2); 
     }
 }
-const video = document.createElement('video'); 
+
+
+
+
+const video = document.createElement('video');
 video.src = 'img/telaInicial.mp4';
-video.preload = 'auto';
 video.loop = true;
+video.muted = true;
+video.autoplay = true;
+video.style.position = 'absolute';
+video.style.top = '0';
+video.style.left = '0';
+video.style.width = '100%';
+video.style.height = '100%';
+video.style.zIndex = '0'; // Fundo da tela inicial
+document.body.appendChild(video);
 
-video.addEventListener('canplaythrough', () => {
-    video.loop = true; 
-    video.play(); 
-    mostrarVideo();
-});
-
+// Exibe a tela inicial
 function showStartScreen() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); 
-    ctx.drawImage(
-        video,
-        0, 0, video.videoWidth, video.videoHeight, 
-        0, 0, canvas.width, canvas.height          
-    );
-
-    requestAnimationFrame(showStartScreen);
-    canvas.addEventListener('click', startGame);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    requestAnimationFrame(showStartScreen); // Continua chamando até o jogo iniciar
 }
 
 function startGame() {
     if (!gameStarted) {
-        canvas.removeEventListener('click', startGame);
+        window.removeEventListener('click', startGame);
         gameStarted = true;
-        cutsceneActive = false;
-        loop();
+        document.body.removeChild(video);
+
+        
+        const cutscene1 = document.createElement('video');
+        cutscene1.src = 'cutscene/cutscene1.mp4';
+        cutscene1.type = 'video/mp4';
+        cutscene1.style.position = 'absolute';
+        cutscene1.style.top = '0';
+        cutscene1.style.left = '0';
+        cutscene1.style.width = '100%';
+        cutscene1.style.height = '100%';
+        cutscene1.style.zIndex = '9999';
+        document.body.appendChild(cutscene1);
+
+        cutscene1.play();
+
+        // Função para remover a cutscene
+        function removeCutscene() {
+            cutscene1.pause();
+            cutscene1.src = "";
+            document.body.removeChild(cutscene1);
+            document.removeEventListener('keydown', skipCutscene); // Remover listener
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpar canvas
+        }
+
+        // Listener para pular a cutscene com "Q"
+        function skipCutscene(event) {
+            if (event.key === 'q' || event.key === 'Q') {
+                removeCutscene(); // Limpar a cutscene
+                loop(); // Continuar para o loop do jogo
+            }
+        }
+
+        document.addEventListener('keydown', skipCutscene);
+
+        // Quando a cutscene termina automaticamente
+        cutscene1.onended = function () {
+            removeCutscene(); // Limpar a cutscene
+            loop(); // Continuar para o loop do jogo
+        };
     }
 }
 
 function loop() {
+    if (gamePaused) {
+        requestAnimationFrame(loop); 
+        return;
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     eu.atualiza();
     eu.desenha();
     desenhaColisoes();
     requestAnimationFrame(loop);
-    if (keys['e']) { 
-        if (!intera) {
-            atira();
-        }
-    }
 }
 loadMapImages();
-
+window.addEventListener('click', startGame);
