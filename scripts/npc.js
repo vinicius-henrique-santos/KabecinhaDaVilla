@@ -73,9 +73,9 @@ const cachorro = {
         ctx.drawImage(
             cachorroimg,
             this.sx, this.sy,
-            this.gordura, this.altura,  // Largura e altura da imagem cortada
-            (this.pX - ajusteX) * zoomLevel, (this.pY - ajusteY) * zoomLevel,  // Posição ajustada do NPC no canvas
-            this.gordura + zoomLevel + 4, this.altura + zoomLevel + 4  // Largura e altura escaladas
+            this.gordura, this.altura, 
+            (this.pX - ajusteX) * zoomLevel, (this.pY - ajusteY) * zoomLevel,  
+            this.gordura + zoomLevel + 4, this.altura + zoomLevel + 4  
         );
     }
 };
@@ -242,9 +242,9 @@ const boina = {
         ctx.drawImage(
             idosoBoinaImg,
             this.sx, this.sy,
-            this.gordura, this.altura,  // Largura e altura da imagem cortada
-            (this.pX - ajusteX) * zoomLevel, (this.pY - ajusteY) * zoomLevel,  // Posição ajustada do NPC no canvas
-            this.gordura + zoomLevel + 6, this.altura + zoomLevel + 6  // Largura e altura escaladas
+            this.gordura, this.altura,  
+            (this.pX - ajusteX) * zoomLevel, (this.pY - ajusteY) * zoomLevel,
+            this.gordura + zoomLevel + 6, this.altura + zoomLevel + 6  
         );
     }
 };
@@ -413,8 +413,8 @@ const poste = {
         ctx.drawImage(
             posteimg,
             this.sx, this.sy,
-            this.gordura, this.altura,  // Largura e altura da imagem cortada
-            (this.pX - ajusteX) * zoomLevel, (this.pY - ajusteY) * zoomLevel,  // Posição ajustada do NPC no canvas
+            this.gordura, this.altura, 
+            (this.pX - ajusteX) * zoomLevel, (this.pY - ajusteY) * zoomLevel,
             this.gordura + zoomLevel + 8, this.altura + zoomLevel + 37
         );
     }
