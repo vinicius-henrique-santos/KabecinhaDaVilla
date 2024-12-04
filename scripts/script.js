@@ -21,6 +21,24 @@ let showThanks = false;
 
 
 
+const imgDica = new Image();
+imgDica.src = 'img/dica.png';
+
+const obg = new Image();
+obg.src = "img/cartafinal.png";
+
+const cartachave = new Image();
+cartachave.src = "img/cartachave.png";
+cartachave.style.zIndex='999';
+
+const prateleira = new Image();
+prateleira.src = "img/prateleira.png";
+
+const atire = new Image();
+atire.src = "img/atire.png";
+
+const preto = new Image();
+preto.src = "img/preto.jpg";
 
 window.addEventListener('keydown', function(event){
     keys[event.key] = true;
@@ -92,32 +110,18 @@ const eu = {
         desenharMapa();
         desenhaaoFundo();
         if (currentMap === 'mapas/mapa03.png' && !comprado) {
-            ctx.fillStyle = 'white';
-            ctx.font = '20px "Roboto", Arial, sans-serif';
-            ctx.fillText(`Vá a uma prateleira e pegue os itens.`, 240, 220);
+            ctx.drawImage(prateleira, 240, 220, 370, 160);
         }
         
         if (currentMap === 'mapas/mapa04.png') {
             if (desenhaBandi) {
-                ctx.fillStyle = 'red';
-                ctx.font = '35px "Roboto", Arial, sans-serif';
-                ctx.fillText(`ATIRE`, canvas.width / 2, 865);
+                ctx.drawImage(atire, canvas.width/2, 200, 300, 300);
             }
         }
-        if(msg){
-            ctx.fillStyle = 'red';
-            ctx.font = '27px Arial';
-            ctx.fillText(`Aperte e para escavar`, 90, 115);
-        }
-        if(cartaTxt){
-            ctx.fillStyle = 'red';
-            ctx.font = '18px Arial';
-            ctx.fillText(`Dia 900 | Não sei se tenho tempo, então Deixei essa chave, tome! Você ganhou uma chave. Aperte q para sair`, 500, 900);
-        }
-        if(msgBarril){
-            ctx.fillStyle = 'red';
+        if(pa){
+            ctx.fillStyle = 'black';
             ctx.font = '17px Arial';
-            ctx.fillText(`Parece que vc pode usar a chave aqui?`, 270, 400);
+            ctx.fillText(`Vc ganhou uma pá`, 150, 180);
         }
         ctx.drawImage(
             eusprite,
@@ -131,14 +135,14 @@ const eu = {
         if (tiro) {
             let disparo = 6;
             let intervaloTiro = setInterval(() => {
-                ctx.clearRect(posX, posY, 7, 7); // Limpar posição anterior do tiro
-                posY -= disparo; // Mover o tiro para cima
+                ctx.clearRect(posX, posY, 7, 7);
+                posY -= disparo; 
                 ctx.fillStyle = "red";
-                ctx.fillRect(posX, posY, 7, 7); // Desenhar tiro na nova posição
+                ctx.fillRect(posX, posY, 7, 7); 
         
                 disparo++;
         
-                if (disparo === 19) {
+                if (disparo === 9) {
                     desenhaBandi = false;
                     clearInterval(intervaloTiro);
                     disparo = 6;
@@ -148,21 +152,22 @@ const eu = {
             }, 30);
         }
         if(!desenhaBandi && currentMap==='mapas/mapa04.png'){
-            ctx.fillStyle = 'black';
-            ctx.font = '25px "Roboto", Arial, sans-serif';
-            ctx.fillText(`Tente achar uma escapatória.`, 100, 300);
+            ctx.drawImage(imgDica, 150, 150, 220, 120);
+
         }
         
         desenhaHud();
         if (showThanks) {
-            const obg = new Image();
-            obg.src("img/cartafinal.png");
             ctx.drawImage(
                 obg,
                 0, 0,
                 canvas.width, canvas.height
             );
             eu.speed = 0;
+        }
+        if(cartaTxt){
+            ctx.drawImage(preto, 0, 0, canvas.width, canvas.height);
+            ctx.drawImage(cartachave, 500, 0, 900, 900);
         }
     },
     atualiza() {
@@ -254,8 +259,8 @@ function desenhaColisoes() {
 
         ctx.strokeStyle = 'transparent';
         ctx.strokeRect(
-            (colisao.x - ajusteX) * zoomLevel, // Ajuste com câmera e zoom para o desenho
-            (colisao.y - ajusteY) * zoomLevel, // Ajuste com câmera e zoom para o desenho
+            (colisao.x - ajusteX) * zoomLevel,
+            (colisao.y - ajusteY) * zoomLevel, 
             colisao.largura * zoomLevel, 
             colisao.altura * zoomLevel
         );
@@ -328,13 +333,12 @@ video.style.top = '0';
 video.style.left = '0';
 video.style.width = '100%';
 video.style.height = '100%';
-video.style.zIndex = '0'; // Fundo da tela inicial
+video.style.zIndex = '0';
 document.body.appendChild(video);
 
-// Exibe a tela inicial
 function showStartScreen() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    requestAnimationFrame(showStartScreen); // Continua chamando até o jogo iniciar
+    requestAnimationFrame(showStartScreen); 
 }
 
 function startGame() {
@@ -357,29 +361,26 @@ function startGame() {
 
         cutscene1.play();
 
-        // Função para remover a cutscene
         function removeCutscene() {
             cutscene1.pause();
             cutscene1.src = "";
             document.body.removeChild(cutscene1);
-            document.removeEventListener('keydown', skipCutscene); // Remover listener
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpar canvas
+            document.removeEventListener('keydown', skipCutscene); 
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
         }
 
-        // Listener para pular a cutscene com "Q"
         function skipCutscene(event) {
             if (event.key === 'q' || event.key === 'Q') {
-                removeCutscene(); // Limpar a cutscene
-                loop(); // Continuar para o loop do jogo
+                removeCutscene(); 
+                loop();
             }
         }
 
         document.addEventListener('keydown', skipCutscene);
 
-        // Quando a cutscene termina automaticamente
         cutscene1.onended = function () {
-            removeCutscene(); // Limpar a cutscene
-            loop(); // Continuar para o loop do jogo
+            removeCutscene(); 
+            loop();
         };
     }
 }
